@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template xml:space="preserve">
+    <t t-name="todos.settings" owl="1">
+        <div>
+            <nav class="navbar">
+                <h2 class="navbarTitle">Todo App Settings</h2>
+            </nav>
+        
+            <div class="sidebar">
+                <button class="sidebarBtn" t-on-click="handleMainClick">Home</button>
+            </div>
+        
+            <div class="mainContent">
+                <h1 class="settingsHeader">Settings</h1>
+        
+                <form class="categoryForm" t-on-submit="handleSaveCategory">
+                    <label for="todo-category">Select Category To Sort By:</label>
+                    <select class="categorySelect" t-model="state.selectedCategory">
+                        <option value="All Categories">All Categories</option>
+                        <t t-foreach="state.customCategories" t-as="category" t-key="category.id">
+                            <option t-att-value="category.category_name" t-esc="category.category_name"/>
+                        </t>
+                        <t t-foreach="['Work', 'Personal', 'Other']" t-as="category" t-key="category">
+                            <option t-att-value="category" t-esc="category"/>
+                        </t>
+                    </select>
+                    <button class="saveButton" type="submit">Save Category</button>
+                </form>
+        
+                <p>Selected Category: <span id="selected-category" t-esc="state.selectedCategory"/></p>
+        
+                <div class="actionButtons">
+                    <button class="dangerBtn" t-on-click="handleDeleteAllCategories">Delete All Categories</button>
+                    <button class="dangerBtn" t-on-click="handleDeleteAllTodos">Delete All Todos</button>
+                    <button class="backupBtn" t-on-click="handleBackup">Backup Todos</button>
+                    <button class="restoreBtn" t-on-click="() => this.fileInputRef.el.click()">Restore Data</button>
+                    <input type="file" t-ref="fileInput" t-on-change="handleRestore" accept=".json" style="display: none;"/>
+                </div>
+        
+                <div class="customCategoryContainer">
+                    <h2 class="customCategoryHeader">Add a Custom Category</h2>
+                    <input class="customCategoryInput" type="text" t-model="state.customCategoryInput" placeholder="Enter custom category"/>
+                    <button class="addCustomCategoryBtn" type="button" t-on-click="handleAddCustomCategory">Add Category</button>
+                </div>
+        
+                <div class="deleteCategoryContainer">
+                    <h2 class="deleteCategoryHeader">Delete a Custom Category</h2>
+                    <label class="categoryLabel" for="category-delete">Select Category to Delete:</label>
+                    <select class="categorySelect" t-model="state.selectedCategoryForDeletion">
+                        <option value="">Select a category</option>
+                        <t t-foreach="state.customCategories" t-as="category" t-key="category.id">
+                            <option t-att-value="category.id" t-esc="category.category_name"/>
+                        </t>
+                    </select>
+                    <div class="buttonContainer">
+                      <button class="dangerBtn" type="button" t-on-click="handleDeleteCategory">Delete Selected Category</button>
+                    </div>            <t t-if="state.deletionWarning">
+                        <p class="warningMessage">Please select a category to delete.</p>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </t>
+</template>

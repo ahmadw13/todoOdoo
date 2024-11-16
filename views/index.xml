@@ -1,0 +1,12 @@
+<odoo>
+  <data>
+    <template name="todos" id="todos.home">
+      <head>
+        <t t-call-assets="todos.assets_task"/>
+        <title>OWL Todo App</title>
+      </head>
+      <body>
+      </body>
+    </template>
+  </data>
+</odoo>

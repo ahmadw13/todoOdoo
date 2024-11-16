@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template xml:space="preserve">
+    <t t-name="todos.main" owl="1">
+        <div class="container">
+            <!-- Navbar -->
+            <nav class="navbar">
+                <h2>Todo App</h2>
+                <div class="searchContainer">
+                    <input
+                        t-att-value="state.searchTerm"
+                        t-on-input="handleSearchInput"
+                        type="text"
+                        class="searchInput"
+                        placeholder="Search todos..."
+                    />
+                </div>
+                <span class="usernameDisplay" t-esc="state.displayUsername" />
+            </nav>
+
+            <!-- Main Content Wrapper -->
+            <div class="contentWrapper">
+                <!-- Sidebar -->
+                <div class="sidebar">
+                    <button class="sidebarBtn" t-on-click="handleSettingsClick">Settings</button>
+                    <button
+                        class="sidebarBtn logoutButton"
+                        t-on-click="handleLogout"
+                    >
+                        Logout
+                    </button>
+                </div>
+
+                <!-- Main Content Area -->
+                <div class="mainContent" t-att-key="state.todos.length">
+                    <t t-if="state.isLoading">
+                        <div class="loadingContainer">
+                            <p>Loading todos...</p>
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <!-- Header Section -->
+                    <div class="headerSection">
+                        <p>Sorting by: <t t-esc="state.selectedCategory" /></p>
+                    </div>
+
+                        <!-- Floating Add Todo Button -->
+                    <button class="floatingAddBtn" t-on-click="() => state.showAddModal = true">+</button>
+
+                        <!-- Scrollable Todo List Section -->
+                        <!-- Previous template sections remain the same until todoListContainer -->
+<div class="todoListContainer">
+    <t t-if="filteredTodos.length > 0">
+        <div class="todoList">
+            <t t-foreach="filteredTodos" t-as="todo" t-key="todo.id">
+                <section class="todoItem" t-att-class="{ 'todoDone': todo.done }">
+                                            <!-- Todo Item Structure remains the same -->
+                    <div class="todoHeader">
+                        <input 
+                            type="checkbox" 
+                            class="doneCheckbox"
+                            t-att-checked="todo.done"
+                            t-on-change="() => this.handleToggleDone(todo)"
+                        />
+                        <h3 t-att-class="{'titleDone': todo.done}">
+                            <t t-esc="todo.title" />
+                        </h3>
+                    </div>
+                    <p t-att-class="{ 'descriptionDone': todo.done }">
+                        <t t-esc="todo.description" />
+                    </p>
+                    <time t-att-datetime="new Date(todo.date_time).toISOString()">
+                        <t t-esc="new Date(todo.date_time).toLocaleString()" />
+                    </time>
+                    <p><strong>Category:</strong> <t t-esc="todo.category" /></p>
+                    <div class="buttonsContainer">
+                        <button
+                            class="editBtn"
+                            t-on-click="() => this.handleEditTodo(todo)"
+                        >
+                            Edit
+                        </button>
+                        <button
+                            class="deleteTodoBtn"
+                            t-on-click="() => this.handleDeleteTodo(todo.id)"
+                        >
+                            Delete
+                        </button>
+                    </div>
+                </section>
+            </t>
+        </div>
+    </t>
+    <t t-else="">
+        <p>No todos available.</p>
+    </t>
+</div>
+                </t>
+                    <t t-if="state.isEditDialogOpen">
+            <dialog class="dialog" open="open">
+                <form class="todoForm" t-on-submit.prevent="handleSaveChanges">
+                    <h3>Edit Todo</h3>
+                    <input type="text" name="editTitle" t-att-value="state.currentTodo.title" required="required" />
+                    <textarea name="editDescription" required="required" t-att-value="state.currentTodo.description"></textarea>
+                    <input type="datetime-local" name="editDate" t-att-value="new Date(state.currentTodo.date_time).toISOString().slice(0, 16)" required="required" />
+                    <select name="editCategory" required="required">
+                        <option value="">Select a category</option>
+                        <t t-foreach="state.categories" t-as="category" t-key="category">
+                            <option t-att-value="category" t-att-selected="state.currentTodo.category === category"><t t-esc="category" /></option>
+                        </t>
+                    </select>
+                    <div class="modalButtons">
+                        <button type="submit">Save Changes</button>
+                        <button type="button" t-on-click="() => { state.isEditDialogOpen = false; state.currentTodo = null; }">Cancel</button>
+                    </div>
+                </form>
+            </dialog>
+        </t>
+                    <!-- Modal Form for Adding a New Todo -->
+                    <t t-if="state.showAddModal">
+                        <dialog class="dialog" open="open">
+                            <form class="todoForm" t-on-submit.prevent="handleAddTodo">
+                                <h3>Add New Todo</h3>
+                                <input type="text" name="todoTitle" placeholder="Enter todo title" required="required" />
+                                <textarea name="todoDescription" placeholder="Enter todo description" required="required"></textarea>
+                                <input type="datetime-local" name="todoDateTime" required="required" />
+                                <select name="todoCategory" required="required">
+                                    <option value="">Select a category</option>
+                                    <t t-foreach="state.categories" t-as="category" t-key="category">
+                                        <option t-att-value="category"><t t-esc="category" /></option>
+                                    </t>
+                                </select>
+                                <div class="modalButtons">
+                                    <button type="submit">Add Todo</button>
+                                    <button type="button" t-on-click="() => state.showAddModal = false">Cancel</button>
+                                </div>
+                            </form>
+                        </dialog>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </t>
+</template>

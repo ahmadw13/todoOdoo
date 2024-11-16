@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template xml:space="preserve">
+    <t t-name="todos.login" owl="1">
+        <div class="styles.body">
+            <div class="styles.container">
+                <input
+                    type="checkbox"
+                    id="toggle-checkbox"
+                    class="toggleCheckbox"
+                    t-att-checked="state.isRegistering"
+                    t-on-change="toggleRegistering"
+                />
+                <div class="styles.formWrapper">
+                    <t t-if="!state.isRegistering">
+                        <div class="loginFormContainer">
+                            <form id="login-form" t-on-submit="handleLoginSubmit" class="formContainer">
+                                <h2 class="title">Login</h2>
+                                <input class="styles.input" type="text" name="username" placeholder="Username" required="required" />
+                                <input class="input" type="password" name="password" placeholder="Password" required="required" />
+                                <button type="submit" class="button">Login</button>
+                                <p class="text">
+                                    Don't have an account?
+                                    <label for="toggle-checkbox" class="toggleLabel">Register</label>
+                                </p>
+                            </form>
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <div class="registerFormContainer">
+                            <form id="register-form" t-on-submit="handleRegisterSubmit" class="formContainer">
+                                <h2 class="title">Register</h2>
+                                <input class="input" type="text" name="username" placeholder="Username" required="required" />
+                                <input class="input" type="password" name="password" placeholder="Password" required="required" />
+                                <button type="submit" class="button">Register</button>
+                                <p class="text">
+                                    Already have an account?
+                                    <label for="toggle-checkbox" class="toggleLabel">Login</label>
+                                </p>
+                            </form>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </t>
+</template>
